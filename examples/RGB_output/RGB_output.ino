@@ -9,7 +9,7 @@
 
 #include <Arduino.h>
 #include <DmxOutput.h>
-#include "led/led.h"
+#include "led.h"
 
 // Declare an instance of the DMX Output
 DmxOutput dmx;
