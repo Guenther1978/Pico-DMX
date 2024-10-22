@@ -31,9 +31,12 @@ void RgbLedControl::Init(uint8_t address)
   //  Serial.println();
 }
 
-void RgbLedControl::LoadProperties(uint8_t (&b)[10][10])
+void RgbLedControl::LoadProperties(uint8_t scene)
 {
-  
+  for (uint8_t i = 0; i < kNumberOfLeds; i++)
+  {
+    led[i].LoadProperties(scene);
+  }
 }
 
 void RgbLedControl::Update()

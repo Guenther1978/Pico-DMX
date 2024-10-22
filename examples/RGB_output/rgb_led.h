@@ -45,7 +45,7 @@
 //  unsigned char button_pressed;
 //};
 
-const uint8_t kNumberOfLeds = 3;
+//const uint8_t kNumberOfLeds = 3;
 
 class RgbLedControl
 {
@@ -61,7 +61,7 @@ class RgbLedControl
     */
     void Update();
 
-    void LoadProperties(uint8_t *);
+    void LoadProperties(uint8_t);
 
     //    /** @return playOfLight */
     //    unsigned char getPlayOfLight(void);

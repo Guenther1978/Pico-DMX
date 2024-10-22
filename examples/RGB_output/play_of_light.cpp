@@ -29,8 +29,9 @@ void PlayOfLight::UpdateProperties(void)
   for (uint8_t j = 0; j < kNumberOfLeds; j++)
   {
     for (uint8_t i = 0; i < kNumberOfRgbs; i++)
-    uint8_t index = scene_;
-    rgb_led_control[i].led[j].LoadProperties([index][i][]);
+    {
+      rgb_led_control[i].LoadProperties(scene_);
+    }
   }
 }
 

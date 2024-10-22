@@ -63,22 +63,22 @@ void Led::ChangePointer()
   }
 }
 
-void Led::LoadProperties(uint8_t properties[][]) {
+void Led::LoadProperties(uint8_t scene) {
   //  LedDefaultProperties content;
   //  EEPROM.get (address, content);
 
-  dimmable_ = properties[number_][0] & kBitDimmable;
-  new_factor_ = properties[0] & kBitNewFactor;
-  new_min_pointer_at_max_ = properties[0] & kBitNewMinPointerAtMax;
-  new_max_pointer_at_min_ = properties[0] & kBitNewMaxPointerAtMin;
-  wait_at_min_ = properties[0] & kBitWaitAtMin;
-  wait_at_max_ = properties[0] & kBitWaitAtMax;
-  led_is_on_ = properties[0] & kBitLedIsOn;
-  color_factor_ = properties[1];
-  offset_ = properties[2];
-  pointer_min_limit_ = properties[3];
-  pointer_max_limit_ = properties[4];
-  progmem_index_ = properties[5];
+  dimmable_ = properties[scene][number_][0] & kBitDimmable;
+  new_factor_ = properties[scene][number_][0] & kBitNewFactor;
+  new_min_pointer_at_max_ = properties[scene][number_][0] & kBitNewMinPointerAtMax;
+  new_max_pointer_at_min_ = properties[scene][number_][0] & kBitNewMaxPointerAtMin;
+  wait_at_min_ = properties[scene][number_][0] & kBitWaitAtMin;
+  wait_at_max_ = properties[scene][number_][0] & kBitWaitAtMax;
+  led_is_on_ = properties[scene][number_][0] & kBitLedIsOn;
+  color_factor_ = properties[scene][number_][1];
+  offset_ = properties[scene][number_][2];
+  pointer_min_limit_ = properties[scene][number_][3];
+  pointer_max_limit_ = properties[scene][number_][4];
+  progmem_index_ = properties[scene][number_][5];
 
   if (led_is_on_) {
     pointer_max_ = pointer_max_limit_;
