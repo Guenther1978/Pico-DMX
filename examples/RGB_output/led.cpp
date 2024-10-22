@@ -1,374 +1,157 @@
 #include <Arduino.h>
-#include <EEPROM.h>
+//#include <EEPROM.h>
 
 #include "led.h"
 
-
-bool Led::initialized(void)
-  {
-    return _led_is_on;
-  }
-
-void Led::setInitialized(bool led_is_on)
-  {
-    _led_is_on = led_is_on;
-    if (!_led_is_on)
-      {
-        _dimmable = false;
-      }
-  }
-
-
-// _factor
-
-uint8_t Led::getFactor()
+Led::Led()
 {
-  return _dimm_factor;
+  address_ = 2;
 }
 
-void Led::setFactor(uint8_t factor)
+Led::Led(uint8_t address)
 {
-  _dimm_factor = factor;
+  address_ = address;
 }
 
-uint8_t Led::getColorFactor()
+Led::Led(uint8_t address, uint8_t number)
 {
-  return _color_factor;
+  address_ = address;
+  number_ = number;
 }
-
-void Led::setColorFactor(uint8_t factor)
-{
-  _color_factor = factor;
-}
-
-
-// _newFactorAtMax
-
-bool Led::getNewFactor()
-{
-  return _newFactor;
-}
-
-void Led::setNewFactor(bool newFactor)
-{
-  _newFactor = newFactor;
-}
-
-
-// _darker
-
-bool Led::getDarker()
-{
-  return _darker;
-}
-
-void Led::setDarker(bool darker)
-{
-  _darker = darker;
-}
-
-void Led::invertDarker()
-{
-  _darker = !_darker;
-}
-
-
-// _darkerHasChanged, _intensityAtMax, intensityAtMin
-
-bool Led::getDarkerHasChanged()
-{
-  return _darkerHasChanged;
-}
-
-bool Led::getPointerIsAtMin()
-{
-  return _pointerIsAtMin;
-}
-
-bool Led::getPointerIsAtMax()
-{
-  return _pointerIsAtMax;
-}
-
 
 ///////////////////////////////////////////////////////
 // methods dealing with the pointer to the intensities
 ///////////////////////////////////////////////////////
 
-void Led::increasePointer()
+void Led::IncreasePointer()
 {
-  _pointer ++;
-  if (_pointer == _pointerMax)
-    {
-      _pointerIsAtMin = false;
-      _pointerIsAtMax = true;
-      _darker = true;
-      _darkerHasChanged = true;
-    }
+  pointer_ ++;
+  if (pointer_ == pointer_max_)
+  {
+    pointer_is_at_min_ = false;
+    pointer_is_at_max_ = true;
+    darker_ = true;
+    darker_has_changed_ = true;
+  }
 }
 
-void Led::decreasePointer()
+void Led::DecreasePointer()
 {
-  _pointer --;
-  if (_pointer == _pointerMin)
-    {
-      _pointerIsAtMin = true;
-      _pointerIsAtMax = false;
-      _darker = false;
-      _darkerHasChanged = true;
-    }
+  pointer_ --;
+  if (pointer_ == pointer_min_)
+  {
+    pointer_is_at_min_ = true;
+    pointer_is_at_max_ = false;
+    darker_ = false;
+    darker_has_changed_ = true;
+  }
 }
 
-void Led::changePointer()
+void Led::ChangePointer()
 {
-  if (_dimmable && _pointerIsChangeable)
+  if (dimmable_ && pointer_is_changeable_)
+  {
+    darker_has_changed_ = false;
+    if (darker_)
     {
-      _darkerHasChanged = false;
-      if (_darker)
-        {
-          decreasePointer();
-        }
-      else
-        {
-          increasePointer();
-        }
+      DecreasePointer();
     }
+    else
+    {
+      IncreasePointer();
+    }
+  }
 }
 
-void Led::saveToEeprom(uint8_t address) {
-  LedDefaultProperties content;
+void Led::LoadProperties(uint8_t properties[][]) {
+  //  LedDefaultProperties content;
+  //  EEPROM.get (address, content);
 
-  if (_dimmable) {
-    content.default_booleans |= kBitDimmable;
+  dimmable_ = properties[number_][0] & kBitDimmable;
+  new_factor_ = properties[0] & kBitNewFactor;
+  new_min_pointer_at_max_ = properties[0] & kBitNewMinPointerAtMax;
+  new_max_pointer_at_min_ = properties[0] & kBitNewMaxPointerAtMin;
+  wait_at_min_ = properties[0] & kBitWaitAtMin;
+  wait_at_max_ = properties[0] & kBitWaitAtMax;
+  led_is_on_ = properties[0] & kBitLedIsOn;
+  color_factor_ = properties[1];
+  offset_ = properties[2];
+  pointer_min_limit_ = properties[3];
+  pointer_max_limit_ = properties[4];
+  progmem_index_ = properties[5];
+
+  if (led_is_on_) {
+    pointer_max_ = pointer_max_limit_;
   }
   else {
-    content.default_booleans &= ~kBitDimmable;
+    pointer_min_ = pointer_min_limit_;
   }
-
-  if (_newFactor) {
-    content.default_booleans |= kBitNewFactor;
-  }
-  else {
-    content.default_booleans &= ~kBitNewFactor;
-  }
-
-  if (_led_is_on) {
-    content.default_booleans |= kBitLedIsOn;
-  }
-  else {
-    content.default_booleans &= ~kBitLedIsOn;
-  }
-
-  if (_newMinPointerAtMax) {
-    content.default_booleans |= kBitNewMinPointerAtMax;
-  }
-  else {
-    content.default_booleans &= ~kBitNewMinPointerAtMax;
-  }
-
-  if (_newMaxPointerAtMin) {
-    content.default_booleans |= kBitNewMaxPointerAtMin;
-  }
-  else {
-    content.default_booleans &= ~kBitNewMaxPointerAtMin;
-  }  if (_waitAtMin) {
-    content.default_booleans |= kBitWaitAtMin;
-  }
-  else {
-    content.default_booleans &= ~kBitWaitAtMin;
-  }
-
-  if (_waitAtMax) {
-    content.default_booleans |= kBitWaitAtMax;
-  }
-  else {
-    content.default_booleans &= ~kBitWaitAtMax;
-  }
-
-  content.progmem_index = _progmemIndex;
-  content.factor = _color_factor;
-  content.offset = _offset;
-  content.pointer_min = _defaultPointerMin;
-  content.pointer_max = _defaultPointerMax;
-
-  EEPROM.put (address, content);
-}
-
-void Led::loadFromEeprom(uint8_t address) {
-  LedDefaultProperties content;
-  EEPROM.get (address, content);
-
-  _dimmable = content.default_booleans & kBitDimmable;
-  _newFactor = content.default_booleans & kBitNewFactor;
-  _newMinPointerAtMax = content.default_booleans & kBitNewMinPointerAtMax;
-  _newMaxPointerAtMin = content.default_booleans & kBitNewMaxPointerAtMin;
-  _waitAtMin = content.default_booleans & kBitWaitAtMin;
-  _waitAtMax = content.default_booleans & kBitWaitAtMax;
-  _led_is_on = content.default_booleans & kBitLedIsOn;
-  _progmemIndex = content.progmem_index;
-  _color_factor = content.factor;
-  _offset = content.offset;
-  _defaultPointerMin = content.pointer_min;
-  _defaultPointerMax = content.pointer_max;
-
-  if (_led_is_on) {
-    _pointer = 0xFF;
-  }
-  else {
-    _pointer = 0x00;
-  }
+  
+  initialized_ = false;
 }
 
 ////////////////////////////////////////////////
 // methods dealing with the class SpeedControl
 ////////////////////////////////////////////////
 
-bool Led::letSpeedControlCount()
+bool Led::LetSpeedControlCount()
 {
-  return speedControl.count();
+  return speed_control_.count();
 }
 
-void Led::setSpeedControlDuration(uint8_t duration)
+void Led::SetSpeedControlDuration(uint8_t duration)
 {
-  speedControl.setDuration(duration);
+  speed_control_.set_duration(duration);
 }
 
-uint8_t Led::getSpeedControlDuration()
+uint8_t Led::GetSpeedControlDuration()
 {
-  return speedControl.getDuration();
+  return speed_control_.duration();
 }
 
-void Led::setSpeedControlCounter(uint8_t counter)
+void Led::SetSpeedControlCounter(uint8_t counter)
 {
-  speedControl.setCounter(counter);
+  speed_control_.set_counter(counter);
 }
 
-uint8_t Led::getSpeedControlCounter()
+uint8_t Led::GetSpeedControlCounter()
 {
-  return speedControl.getCounter();
+  return speed_control_.counter();
 }
 
-
-////////////////////////////////////////////////
-// methods of the class Led8bit
-////////////////////////////////////////////////
-
-
-uint8_t Led8bit::getPin(void)
-{
-  return _pin;
-}
-
-void Led8bit::setPin(uint8_t pin)
-{
-    _pin = pin;
-}
-
-void Led8bit::setPin2default(void)
-{
-  _pin = pwmPins[_number];
-}
-
-uint8_t Led8bit::getIntensity(void)
-{
-  return _intensity;
-}
-
-void Led8bit::setIntensity(uint8_t intensity)
-{
-  _intensity = intensity;
-}
-
-void Led8bit::pointer2int()
+void Led::Pointer2Int()
 {
   uint8_t content;
   uint8_t product;
   uint8_t sum;
 
-  switch(_progmemIndex)
-    {
+  switch (progmem_index_)
+  {
     case 0:
-      content = pgm_read_word_near(intensities_8bit_0 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_0 + pointer_);
       break;
     case 1:
-      content = pgm_read_word_near(intensities_8bit_1 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_1 + pointer_);
       break;
     case 2:
-      content = pgm_read_word_near(intensities_8bit_2 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_2 + pointer_);
       break;
     case 3:
-      content = pgm_read_word_near(intensities_8bit_3 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_3 + pointer_);
       break;
     case 4:
-      content = pgm_read_word_near(intensities_8bit_4 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_4 + pointer_);
       break;
     case 5:
-      content = pgm_read_word_near(intensities_8bit_5 + _pointer);
+      content = pgm_read_word_near(intensities_8bit_5 + pointer_);
       break;
 
     default:
       break;
-    }
+  }
 
-  product = (uint8_t)(255 - content) * _dimm_factor >> 8;
-  sum = (255 -  product) * (255 - _offset) >> 8;
-  sum += _offset;
-  _intensity = (uint8_t)_color_factor * sum >> 8;
-}
-
-void Led8bit::int2output(void)
-{
-  analogWrite(_pin, _intensity);
-}
-
-////////////////////////////////////////////////
-// methods of the class Led16bit
-////////////////////////////////////////////////
-
-uint16_t Led16bit::getIntensity(void)
-{
-  return _intensity;
-}
-
-void Led16bit::setIntensity(uint16_t intensity)
-{
-  _intensity = intensity;
-}
-
-void Led16bit::pointer2int()
-{
-  uint16_t content;
-  uint32_t product;
-  uint16_t sum;
-
-  switch(_progmemIndex)
-    {
-    case 0:
-      content = pgm_read_word_near(intensities_12bit_0 + _pointer);
-      break;
-    case 1:
-      content = pgm_read_word_near(intensities_12bit_1 + _pointer);
-      break;
-    case 2:
-      content = pgm_read_word_near(intensities_12bit_2 + _pointer);
-      break;
-    case 3:
-      content = pgm_read_word_near(intensities_12bit_3 + _pointer);
-      break;
-    case 4:
-      content = pgm_read_word_near(intensities_12bit_4 + _pointer);
-      break;
-    case 5:
-      content = pgm_read_word_near(intensities_12bit_5 + _pointer);
-      break;
-
-    default:
-      break;
-    }
-
-  product = (0x0FFF - content);
-  product *= _dimm_factor;
-  product = product >> 8;
-  sum = 0x0FFF -  product;
-  _intensity = (uint16_t)sum * _color_factor;
+  product = (uint8_t)((255 - content) * dimm_factor_) >> 8;
+  sum = (255 -  product) * (255 - offset_) >> 8;
+  sum += offset_;
+  intensity_ = (uint8_t)((color_factor_ * sum) >> 8);
 }

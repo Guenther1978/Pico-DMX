@@ -27,9 +27,8 @@ uint8_t universe[UNIVERSE_LENGTH + 1];
 
 void setup()
 {
-  // Initialize Serial port
   Serial.begin(9600);
-//  while (!Serial);
+  //while (!Serial);
   Serial.println(F("Serial port initialized."));
 
   old_millis = millis();

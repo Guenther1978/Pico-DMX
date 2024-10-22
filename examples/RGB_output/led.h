@@ -15,186 +15,292 @@ const uint8_t kBitLedIsOn = 0x40;
 
 struct LedDefaultProperties {
   uint8_t default_booleans;
-  uint8_t progmem_index;
   uint8_t factor;
   uint8_t offset;
   uint8_t pointer_min;
   uint8_t pointer_max;
+  uint8_t progmem_index;
 };
+
+const uint8_t kSizeOfProperties = sizeof(struct LedDefaultProperties);
 
 class Led
 {
 
-public:
+  public:
 
-  ///////////////////////////////////////////////////////
-  // methods dealing with the pointer to the intensities
-  ///////////////////////////////////////////////////////
-  
-  /**Increases the pointer to the intensities.
-   *
-   * If the new value of the pointer is equal
-   * to the size of the array,
-   * the pointer will be decreased in the next step;
-   */
-  void IncreasePointer(void);
+    Led();
+    Led(uint8_t);
+    Led(uint8_t, uint8_t);
 
-  /**Decreases the pointer to the intensities.
-  *
-  * If the new value of the pointer is equal
-  * to zero, the pointer will be increased in the next step.
-  */
-  void DecreasePointer(void);
+    ///////////////////////////////////////////////////////
+    // methods dealing with the pointer to the intensities
+    ///////////////////////////////////////////////////////
 
-  /**Increases or decreases the pointer.
-   *
-   * In dependency of the boolean value of darker the method
-   * increasePointer or decreasePointer is called.
-   */
-  void ChangePointer(void);
+    /**Increases the pointer to the intensities.
 
-  ///
-  /// Load default properties from the internal eeprom
-  ///
-  void LoadProperties(uint8_t);
+       If the new value of the pointer is equal
+       to the size of the array,
+       the pointer will be decreased in the next step;
+    */
+    void IncreasePointer(void);
 
-  ////////////////////////////////////////////////
-  // methods dealing with the class SpeedControl
-  ////////////////////////////////////////////////
+    /**Decreases the pointer to the intensities.
 
-  /**@brief Call counter method of class SpeedControl
-   *
-   * The property counter of the aggregated class SpeedControl
-   * is decreased. If its value is equal to zero, true is returned.
-   * The variable is the initialized with the duration. 
-   */
-  bool LetSpeedControlCount(void);
+      If the new value of the pointer is equal
+      to zero, the pointer will be increased in the next step.
+    */
+    void DecreasePointer(void);
 
-  /**@param duration time at one intensity (property of the class SpeedControl)*/
-  void SetSpeedControlDuration(uint8_t);
+    /**Increases or decreases the pointer.
 
-  /**@return duration (the time at one intensity, property of the class SpeedControl)*/
-  uint8_t GetSpeedControlDuration(void);
-  
-  /**@param counter
-   *
-   * If a longer duration is wanted, the counter can be set to
-   * a value greater than duration.
-   */
-  void setSpeedControlCounter(uint8_t);
+       In dependency of the boolean value of darker the method
+       increasePointer or decreasePointer is called.
+    */
+    void ChangePointer(void);
 
-  /**@return counter counts from duration to zero*/
-  uint8_t getSpeedControlCounter(void);
+    ///
+    /// Load default properties from the internal eeprom
+    ///
+    void LoadProperties(uint8_t *);
 
-  /** @brief copy the content of the PROGMEM array to the intensity
-   *
-   * The array with the intensities is included in the header file
-   * 'intensities.h'. This file has been created by the python
-   * script 'progmen_creator.py'.
-   */
-  void pointer2int(void);
+    ////////////////////////////////////////////////
+    // methods dealing with the class SpeedControl
+    ////////////////////////////////////////////////
 
-  ///////////////////////
-  // get and set methods
-  ///////////////////////
+    /**@brief Call counter method of class SpeedControl
 
-  /* default values*/
-  void set_pointer_max_limit(uint8_t limit) { pointer_max_limit_ = limit; }
-  uint8_t pointer_max_limit() const { return pointer_max_limit_; }
-  void set_pointer_min_limit(uint8_t limit) { pointer_min_limit_ = limit; }
-  uint8_t pointer_min_limit() const { return pointer_min_limit_; }
-  void set_factor_default(void factor) { factor_default_ = factor; }
-  uint8_t factor_default() const { return factor_default_ }
+       The property counter of the aggregated class SpeedControl
+       is decreased. If its value is equal to zero, true is returned.
+       The variable is the initialized with the duration.
+    */
+    bool LetSpeedControlCount(void);
 
-  /* offset */
+    /**@param duration time at one intensity (property of the class SpeedControl)*/
+    void SetSpeedControlDuration(uint8_t);
 
-  void set_offset(uint8_t offset) { offset_ = offset; }
-  uint8_t offset() const { return offset_; }
+    /**@return duration (the time at one intensity, property of the class SpeedControl)*/
+    uint8_t GetSpeedControlDuration(void);
 
-  void set_progmem_index(uint8_t index) { progmem_index_ = progmem_index; }
-  uint8_t progmem_index(void) const { return progmem_index_; }
+    /**@param counter
 
-  void set_wait_at_max(bool wait) { wait_at_max_ = wait; }
-  bool wait_at_max(void) const { return wait_at_max_; }
+       If a longer duration is wanted, the counter can be set to
+       a value greater than duration.
+    */
+    void SetSpeedControlCounter(uint8_t);
 
-  void set_wait_at_min(bool wait) { wait_at_min_ = wait; }
-  bool wait_at_min(void) const { return wait_at_min_; }
+    /**@return counter counts from duration to zero*/
+    uint8_t GetSpeedControlCounter(void);
 
-  void set_pointer(uint8_t pointer) { pointer_ = pointer; }
-  uint8_t getPointer() const { return pointer_; }
+    /** @brief copy the content of the PROGMEM array to the intensity
 
-  void set_max_pointer(uint8_t pointer) { max_pointer_ = pointer; }
-  uint8_t max_pointer() const { return max_pointer_; }
+       The array with the intensities is included in the header file
+       'intensities.h'. This file has been created by the python
+       script 'progmen_creator.py'.
+    */
+    void Pointer2Int(void);
 
-  void set_new_max_pointer_at_min(bool pointer) { new_max_pointer_at_min_ = pointer; }
-  bool new_max_pointer_at_min() const { return new_max_pointer_at_min_; }
+    ///////////////////////
+    // get and set methods
+    ///////////////////////
 
-  void set_min_pointer(uint8_t pointer) { min_pointer_ = pointer; }
-  uint8_t getMaxPointer() const { return min_pointer_; }
+    void set_address(uint8_t address) {
+      address_ = 1;
+    }
 
-  void set_new_min_pointer_at_max(bool pointer) { new_min_pointer_at_max_ = pointer; }
-  bool getNewMaxPointerAtMin() const { return new_min_pointer_at_max_; }
+    void set_pointer_max_limit(uint8_t limit) {
+      pointer_max_limit_ = limit;
+    }
 
-  void set_pointer_is_changeable(bool changeable) { pointer_is_changeable_ = changeable; }
-  bool pointer_is_changeable() const { return pointer_is_changeable_; }
+    uint8_t pointer_max_limit() const {
+      return pointer_max_limit_;
+    }
+    void set_pointer_min_limit(uint8_t limit) {
+      pointer_min_limit_ = limit;
+    }
+    uint8_t pointer_min_limit() const {
+      return pointer_min_limit_;
+    }
+    void set_factor_default(uint8_t factor) {
+      factor_default_ = factor;
+    }
+    uint8_t factor_default() const {
+      return factor_default_;
+    }
 
-  void set_dimmable(bool dimmable) { dimmable_ = dimmable }
-  bool dimmable(void) const { return dimmable_ }
+    /* offset */
 
-  void set_led_is_on(bool on) { led_is_on_ = on; }
-  bool led_is_on(void) const { return led_is_on_; }
+    void set_offset(uint8_t offset) {
+      offset_ = offset;
+    }
+    uint8_t offset() const {
+      return offset_;
+    }
 
-  void set_initialized(bool initialized) { initialized_ = initialized; }
-  bool initialized() {return initialized_; }
-  
-  void set_dimm_factor(uint8_t factor) { dimm_factor_ = factor; }
-  uint8_t dimm_factor() const { return dimm_factor_; }
+    void set_progmem_index(uint8_t index) {
+      progmem_index_ = index;
+    }
+    uint8_t progmem_index(void) const {
+      return progmem_index_;
+    }
 
-  void set_color_factor(uint8_t);
-  uint8_t color_factor() const { return color_factor_; }
+    void set_wait_at_max(bool wait) {
+      wait_at_max_ = wait;
+    }
+    bool wait_at_max(void) const {
+      return wait_at_max_;
+    }
 
-  void set_new_factor(bool new_factor) {new_factor_ = new_factor};
-  bool new_factor() const { return new_factor_; }
-  
-  void set_darker(bool darker) { darker_ = darker; }
-  bool darker() const { return darker_; }
+    void set_wait_at_min(bool wait) {
+      wait_at_min_ = wait;
+    }
+    bool wait_at_min(void) const {
+      return wait_at_min_;
+    }
 
-  bool darker_has_changed() const { return darker_has_changed_; }
+    void set_pointer(uint8_t pointer) {
+      pointer_ = pointer;
+    }
+    uint8_t pointer() const {
+      return pointer_;
+    }
 
-  bool pointer_is_at_max() const { return pointer_is_at_max_; }
+    void set_pointer_max(uint8_t pointer) {
+      pointer_max_ = pointer;
+    }
+    uint8_t pointer_max() const {
+      return pointer_max_;
+    }
 
-  bool pointer_is_at_min() const { return pointer_is_at_min_; }
-  
-  void set_intensity(uint8_t intensity) { intensity_ = intensity; }
-  uint8_t intensity() const { return intensity_; }
+    void set_new_max_pointer_at_min(bool pointer) {
+      new_max_pointer_at_min_ = pointer;
+    }
+    bool new_max_pointer_at_min() const {
+      return new_max_pointer_at_min_;
+    }
 
-private:
-  SpeedControl speed_control_;
-  uint8_t color_factor_ = 0xFF;
-  bool darker_ = true;
-  bool darker_has_changed_ = false;
-  uint8_t dimm_factor_ = 0xFF;
-  bool dimmable_ = true;
-  uint8_t factor_default_ = 0xFF;
-  bool initialized_ = false;
-  uint8_t intensity_ = 0x00;
-  bool led_is_on_ = true;
-  uint8_t offset_ = 0;
-  uint8_t pointer_ = 0;
-  bool pointer_is_at_max_ = false;
-  bool pointer_is_at_min_ = false;
-  bool pointer_is_changeable_ = true;
-  uint8_t pointer_max_ = 255;
-  uint8_t pointer_min_ = 0;
-  uint8_t pointer_max_limit_ = 255;
-  uint8_t pointer_min_limit_ = 0;
-  uint8_t progmem_index_ = 0;
-  bool new_max_pointer_at_min_ = false;
-  bool new_min_pointer_ar_max_ = false;
-  bool new_factor_ = false;
-//  uint8_t number_ = 0;
-  bool wait_at_max_ = false;
-  bool wait_at_min_ = false;
+    void set_min_pointer(uint8_t pointer) {
+      pointer_min_ = pointer;
+    }
+    uint8_t pointer_min() const {
+      return pointer_min_;
+    }
+
+    void set_new_min_pointer_at_max(bool pointer) {
+      new_min_pointer_at_max_ = pointer;
+    }
+    bool new_min_pointer_at_max() const {
+      return new_min_pointer_at_max_;
+    }
+
+    void set_pointer_is_changeable(bool changeable) {
+      pointer_is_changeable_ = changeable;
+    }
+    bool pointer_is_changeable() const {
+      return pointer_is_changeable_;
+    }
+
+    void set_dimmable(bool dimmable) {
+      dimmable_ = dimmable;
+    }
+    bool dimmable(void) const {
+      return dimmable_;
+    }
+
+    void set_led_is_on(bool on) {
+      led_is_on_ = on;
+    }
+    bool led_is_on(void) const {
+      return led_is_on_;
+    }
+
+    void set_initialized(bool initialized) {
+      initialized_ = initialized;
+    }
+    bool initialized() {
+      return initialized_;
+    }
+
+    void set_dimm_factor(uint8_t factor) {
+      dimm_factor_ = factor;
+    }
+    uint8_t dimm_factor() const {
+      return dimm_factor_;
+    }
+
+    void set_color_factor(uint8_t);
+    uint8_t color_factor() const {
+      return color_factor_;
+    }
+
+    void set_new_factor(bool new_factor) {
+      new_factor_ = new_factor;
+    }
+    bool new_factor() const {
+      return new_factor_;
+    }
+
+    void set_darker(bool darker) {
+      darker_ = darker;
+    }
+    bool darker() const {
+      return darker_;
+    }
+
+    bool darker_has_changed() const {
+      return darker_has_changed_;
+    }
+
+    void set_number(uint8_t number) {
+      number_ = number;
+    }
+    uint8_t number() const {
+      return number_;
+    }
+    
+    bool pointer_is_at_max() const {
+      return pointer_is_at_max_;
+    }
+
+    bool pointer_is_at_min() const {
+      return pointer_is_at_min_;
+    }
+
+    void set_intensity(uint8_t intensity) {
+      intensity_ = intensity;
+    }
+    uint8_t intensity() const {
+      return intensity_;
+    }
+
+  private:
+    SpeedControl speed_control_;
+    uint8_t address_ = 1;
+    uint8_t color_factor_ = 0xFF;
+    bool darker_ = true;
+    bool darker_has_changed_ = false;
+    uint8_t dimm_factor_ = 0xFF;
+    bool dimmable_ = true;
+    uint8_t factor_default_ = 0xFF;
+    bool initialized_ = false;
+    uint8_t intensity_ = 0x00;
+    bool led_is_on_ = true;
+    bool new_max_pointer_at_min_ = false;
+    bool new_min_pointer_at_max_ = false;
+    bool new_factor_ = false;
+    uint8_t number_ = 0;
+    uint8_t offset_ = 0;
+    uint8_t pointer_ = 0;
+    bool pointer_is_at_max_ = false;
+    bool pointer_is_at_min_ = false;
+    bool pointer_is_changeable_ = true;
+    uint8_t pointer_max_ = 255;
+    uint8_t pointer_min_ = 0;
+    uint8_t pointer_max_limit_ = 255;
+    uint8_t pointer_min_limit_ = 0;
+    uint8_t progmem_index_ = 0;
+    bool wait_at_max_ = false;
+    bool wait_at_min_ = false;
 };
 
-endif    // RPICODMX_RGBOUTPUT_LED_H_
+#endif    // PICODMX_RGBOUTPUT_LED_H_
