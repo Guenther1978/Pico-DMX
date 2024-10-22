@@ -63,56 +63,9 @@ class RgbLedControl
 
     void LoadProperties(uint8_t);
 
-    //    /** @return playOfLight */
-    //    unsigned char getPlayOfLight(void);
-    //
-    //    /**@brief sets the play of light*/
-    //    void setPlayOfLight(bool);
-    //
-    //    /** @return defaultplayOfLight */
-    //    unsigned char getDefaultPlayOfLight(void);
-    //
-    //    /**@brief sets the play of light*/
-    //    void setDefaultPlayOfLight(bool);
-    //
-    //    /** @return playOfLight */
-    //    unsigned char getNumberOfPlays(void);
-    //
-    //    /**@brief sets the play of light*/
-    //    void setNumberOfPlays(void);
-    //
-    //    /**@brief This method sets a new duration time for the loop.*/
-    //    void changeLoopDuration(bool);
-    //
-    //    /**@brief This method sets the beginning of an array.
-    //
-    //       There can be different arrays containing the intensities.
-    //       With this method the index of the progmem is set globally
-    //       for all LEDs.
-    //    */
-    //    void setIndex(bool);
-    //
-    //    /**@brief This method sets if a LED is dimmable */
-    //    void setDimmable(void);
-    //
-    //    /**@brief This method sets if a LED is on or off */
-    //    void setLedIsOn(void);
-    //
-    //    /**@brief This method sets if a LED is initialized */
-    //    void SetInialized(void);
-
   private:
     Led led[kNumberOfLeds]; /**< Array of instances of the class Led */
     uint8_t address_;  // address of first led
-    //uint8_t number_;   // number of instance   
-    //    Button button;
-    //    unsigned char playOfLight;
-    //    unsigned char numberOfPlays;
-    //    unsigned char defaultPlayOfLight;
-    //    unsigned long cycleTime;
-    //    unsigned long loopDuration;
-    //    unsigned long oldMillis;
-    //    byte incomingByte;
 };
 
 #endif

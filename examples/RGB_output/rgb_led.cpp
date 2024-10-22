@@ -8,27 +8,6 @@ void RgbLedControl::Init(uint8_t address)
   {
     led[i].set_address(address + i);
   }
-  // read current default play of light
-  //readEeprom();
-  //playOfLight = defaultPlayOfLight;
-
-  // read led properties for default play of light
-  //readEeprom(playOfLight);
-
-  //oldMillis = millis();
-
-  //randomSeed(analogRead(0));
-
-  //  Serial.begin(9600);
-  //  while (!Serial);
-  //  Serial.print(F("Size of RGB Control default properties: "));
-  //  Serial.println(sizeof(RgbDefaultProperties));
-  //  Serial.print(F("Size of Led default properties: "));
-  //  Serial.println(sizeof(LedDefaultProperties));
-  //  Serial.print(F("Size of play of light: "));
-  //  Serial.println((1 + NUMBER_OF_LEDS * sizeof(LedDefaultProperties)));
-  //  Serial.println("Setup completed");
-  //  Serial.println();
 }
 
 void RgbLedControl::LoadProperties(uint8_t scene)
@@ -41,34 +20,6 @@ void RgbLedControl::LoadProperties(uint8_t scene)
 
 void RgbLedControl::Update()
 {
-//  if (uint8_t duration_of_pressing = button.GetDurationOfPressing())
-//  {
-//    if (duration_of_pressing > 1)
-//    {
-//      playOfLight ++;
-//      if (playOfLight >= numberOfPlays)
-//      {
-//        playOfLight = 0;
-//      }
-//      for (int i = 0; i < NUMBER_OF_LEDS; i ++)
-//      {
-//        led[i].set_pointer_is_changeable(true);
-//        led[i].set_dimm_factor(0xff);
-//        led[i].set_pointer(0x00);
-//      }
-//      //     // readEeprom(playOfLight);
-//      //      for (int i = 0; i < NUMBER_OF_LEDS; i ++)
-//      //      {
-//      //        if (led[i].getLedIsOn()) {
-//      //          led[i].set_intensity(0xFF);
-//      //        }
-//      //        else {
-//      //          led[i].set_intensity(0x00);
-//      //        }
-//      //        led[i].int2output();
-//      //      }
-//    }
-//  }
   for (uint8_t i = 0; i < kNumberOfLeds; i ++)
   {
     if (led[i].initialized())
@@ -189,108 +140,3 @@ void RgbLedControl::Update()
     led[i].Pointer2Int();
   }
 }
-
-//  unsigned char RgbLedControl::getPlayOfLight(void)
-//  {
-//    return playOfLight;
-//  }
-//
-//  void RgbLedControl::setPlayOfLight(bool bt)
-//  {
-//    byte incomingByte = 0;
-//    if (!bt)
-//    {
-//      incomingByte = (byte)getNumber();
-//      if (incomingByte <= numberOfPlays)
-//      {
-//        playOfLight = incomingByte - 1;
-//      }
-//    }
-//
-//    for (int i = 0; i < NUMBER_OF_LEDS; i ++)
-//    {
-//      led[i].setPointerIsChangeable(true);
-//      led[i].setFactor(0xff);
-//      led[i].setPointer(0xff);
-//    }
-//    readEeprom(playOfLight);
-//    for (int i = 0; i < NUMBER_OF_LEDS; i ++)
-//    {
-//      if (led[i].getLedIsOn()) {
-//        led[i].setIntensity(0xFF);
-//      }
-//      else {
-//        led[i].setIntensity(0x00);
-//      }
-//      led[i].int2output();
-//    }
-//  }
-//
-//  unsigned char RgbLedControl::getDefaultPlayOfLight(void)
-//  {
-//    return defaultPlayOfLight;
-//  }
-//
-//  void RgbLedControl::setDefaultPlayOfLight(bool bt)
-//  {
-//    byte incomingByte = 0;
-//    if (!bt)
-//    {
-//      incomingByte = (byte)getNumber();
-//      if (incomingByte < numberOfPlays)
-//      {
-//        defaultPlayOfLight = incomingByte;
-//        writeEeprom();
-//      }
-//    }
-//
-//    for (int i = 0; i < NUMBER_OF_LEDS; i ++)
-//    {
-//      led[i].setPointerIsChangeable(true);
-//      led[i].setFactor(0xff);
-//      led[i].setPointer(0xff);
-//    }
-//    readEeprom(playOfLight);
-//  }
-//
-//  unsigned char RgbLedControl::getNumberOfPlays(void)
-//  {
-//    return numberOfPlays;
-//  }
-//
-//  void RgbLedControl::setNumberOfPlays(void)
-//  {
-//    byte incomingByte = 0;
-//    incomingByte = (byte)getNumber();
-//    if (incomingByte < NUMBER_OF_PLAYS)
-//    {
-//      numberOfPlays = incomingByte;
-//    }
-//    writeEeprom();
-//  }
-//
-//
-//
-//  void RgbLedControl::changeLoopDuration(bool bt)
-//  {
-//    uint8_t newCycleTime = 0;
-//    byte incomingByte = ' ';
-//
-//    if (bt)
-//    {
-//      //   if (bluetoothCommunicator.available())
-//      //   {
-//      //     incomingByte = bluetoothCommunicator.read() - ASCII_OFFSET;
-//      //   }
-//    }
-//    else
-//    {
-//      incomingByte = getNumber();
-//    }
-//
-//    if ((incomingByte > 0) && (incomingByte < 16))
-//    {
-//      newCycleTime = incomingByte * 5;
-//      cycleTime = (unsigned long)newCycleTime;
-//    }
-//  }

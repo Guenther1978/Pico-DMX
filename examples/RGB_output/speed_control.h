@@ -13,14 +13,6 @@ class SpeedControl
        has the value zero, true is returned.
     */
     bool count();
-    //
-    //  void set_counter(uint8_t counter) { counter_ = counter; }
-    //  uint8_t counter_() { return counter_; }
-
-    //  /**@param number of the LED*/
-    //  void setNumber(uint8_t);
-    //  /**@return number of the LED*/
-    //  uint8_t getNumber();
 
     void set_duration(uint8_t duration) {
       duration_ = duration;
