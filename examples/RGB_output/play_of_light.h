@@ -5,6 +5,8 @@
 
 #include "led.h"
 #include "rgb_led.h"
+#include "button.h"
+#include "time_control.h"
 
 const uint8_t kNumberOfRgbs = 3;
 const uint8_t kAddressRgb0 = 8;
@@ -27,9 +29,11 @@ class PlayOfLight
 
   void set_scene(uint8_t scene) { scene_ = scene; }
   uint8_t scene() const { return scene_; }
+
+  RgbLedControl rgb_led_control[kNumberOfRgbs];
   
   private:
-  RgbLedControl rgb_led_control[kNumberOfRgbs];
+  
   bool individual_ = true;
   uint8_t scene_ = 0;
 };

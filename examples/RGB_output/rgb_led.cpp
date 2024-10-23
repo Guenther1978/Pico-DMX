@@ -7,6 +7,7 @@ void RgbLedControl::Init(uint8_t address)
   for (uint8_t i = 0; i < kNumberOfLeds; i ++)
   {
     led[i].set_address(address + i);
+    led[i].set_number(i);
   }
 }
 

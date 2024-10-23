@@ -22,8 +22,8 @@ class Button
 
   private:
     uint8_t pin_ = 2;
-    bool is_pressed_;
-    uint8_t duration_of_pressing_;
+    bool is_pressed_ = false;
+    uint8_t duration_of_pressing_ = 0;
 };
 
 #endif  // PICODMX_RGBOUTPUT_BUTTON_H_

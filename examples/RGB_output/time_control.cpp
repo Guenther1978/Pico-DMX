@@ -27,6 +27,12 @@ unsigned long TimeControl::GetTime()
 	return elapsed_time;
 }
 
+void TimeControl::WaitMilliseconds()
+{
+  old_millis_ = millis();
+  while ((millis() - old_millis_) < delay_time_);
+}
+
 void TimeControl::WaitMilliseconds(unsigned long time)
 {
 	old_millis_ = millis();

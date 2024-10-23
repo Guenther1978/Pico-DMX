@@ -62,9 +62,11 @@ class RgbLedControl
     void Update();
 
     void LoadProperties(uint8_t);
-
-  private:
+    
     Led led[kNumberOfLeds]; /**< Array of instances of the class Led */
+    
+  private:
+
     uint8_t address_;  // address of first led
 };
 
