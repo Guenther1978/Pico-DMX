@@ -16,8 +16,9 @@
 // Declare an instance of the DMX Output
 DmxOutput dmx;
 
-Button button;
+//Button button;
 TimeControl trigger_dmx;
+TimeControl scene_timer;
 PlayOfLight play_of_light;
 
 // Create a universe that we want to send.
@@ -28,6 +29,8 @@ uint8_t universe[UNIVERSE_LENGTH + 1];
 void setup()
 {
   trigger_dmx.set_old_millis(millis());
+
+  play_of_light.Init();
 
   // Start the DMX Output on GPIO-pin 4
   dmx.begin(4);
@@ -40,8 +43,6 @@ void setup()
   // Send out universe on GPIO-pin 1
   dmx.write(universe, UNIVERSE_LENGTH);
 
-//  while ((button.GetDurationOfPressing()) < 1);
-
   play_of_light.UpdateProperties();
 }
 
@@ -49,8 +50,9 @@ void loop()
 {
   trigger_dmx.WaitMilliseconds(100);
 
+  play_of_light.CurrentTimeChooseScene(scene_timer.GetTime());
+  play_of_light.UpdateProperties();
   play_of_light.UpdateIntensities();  
-
 
   for (uint8_t i = 0; i < kNumberOfRgbs; i ++)
   {
@@ -59,7 +61,6 @@ void loop()
       universe[play_of_light.rgb_led_control[i].led[j].address()] = play_of_light.rgb_led_control[i].led[j].intensity();
     }
   }
-//  universe[9] = intensity;
 
   // Send out universe on GPIO-pin 1
   dmx.write(universe, UNIVERSE_LENGTH);
@@ -71,13 +72,4 @@ void loop()
 
   // delay a millisecond for stability (Not strictly necessary)
   delay(1);
-
-//  if (uint8_t durationOfPressing = button.GetDurationOfPressing())
-//  {
-//    if (durationOfPressing > 1)
-//    {
-//      play_of_light.IncreaseScene();
-//      play_of_light.UpdateProperties();
-//    }
-//  }
 }
