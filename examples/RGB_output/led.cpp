@@ -125,29 +125,33 @@ void Led::Pointer2Int()
   uint8_t product;
   uint8_t sum;
 
-  switch (progmem_index_)
+  if (progmem_index_ > kMaxProgmemIndex)
   {
-    case 0:
-      content = pgm_read_word_near(intensities_8bit_0 + pointer_);
-      break;
-    case 1:
-      content = pgm_read_word_near(intensities_8bit_1 + pointer_);
-      break;
-    case 2:
-      content = pgm_read_word_near(intensities_8bit_2 + pointer_);
-      break;
-    case 3:
-      content = pgm_read_word_near(intensities_8bit_3 + pointer_);
-      break;
-    case 4:
-      content = pgm_read_word_near(intensities_8bit_4 + pointer_);
-      break;
-    case 5:
-      content = pgm_read_word_near(intensities_8bit_5 + pointer_);
-      break;
+    switch (progmem_index_)
+    {
+      case 0:
+        content = pgm_read_word_near(intensities_8bit_0 + pointer_);
+        break;
+      case 1:
+        content = pgm_read_word_near(intensities_8bit_1 + pointer_);
+        break;
+      case 2:
+        content = pgm_read_word_near(intensities_8bit_2 + pointer_);
+        break;
+      case 3:
+        content = pgm_read_word_near(intensities_8bit_3 + pointer_);
+        break;
+      case 4:
+        content = pgm_read_word_near(intensities_8bit_4 + pointer_);
+        break;
 
-    default:
-      break;
+      default:
+        break;
+    }
+  }
+  else
+  {
+    content = pointer_;
   }
 
   product = (uint8_t)((255 - content) * dimm_factor_) >> 8;

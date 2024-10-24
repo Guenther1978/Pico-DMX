@@ -16,6 +16,8 @@ const uint8_t kBitLedIsOn = 0x40;
 const uint8_t kNumberOfScenes = 12;
 const uint8_t kNumberOfLeds = 3;
 
+const uint8_t kMaxProgmemIndex = 4;
+
 struct LedDefaultProperties {
   uint8_t default_booleans;
   uint8_t factor;
