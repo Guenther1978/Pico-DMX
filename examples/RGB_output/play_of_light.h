@@ -14,28 +14,39 @@ const uint8_t kAddressRgb1 = 16;
 const uint8_t kAddressRgb2 = 24;
 //const uint8_t kNumberOfScenes = 12;
 
+const uint16_t seconds[kNumberOfScenes] =  {18, 45, 70, 133, 195, 380, 442, 522, 593, 657, 738, 915};
+
 class PlayOfLight
 {
   public:
-  PlayOfLight();
-  
-  void UpdateProperties(void);
-  void UpdateIntensities(void);
+    void Init();
 
-  void IncreaseScene(void);
+    void UpdateProperties(void);
+    void UpdateIntensities(void);
 
-  void set_individual(bool individual) { individual_ = individual; }
-  bool individual() const { return individual_; }
+    void IncreaseScene(void);
+    void CurrentTimeChooseScene(unsigned long);
 
-  void set_scene(uint8_t scene) { scene_ = scene; }
-  uint8_t scene() const { return scene_; }
+    void set_individual(bool individual) {
+      individual_ = individual;
+    }
+    bool individual() const {
+      return individual_;
+    }
 
-  RgbLedControl rgb_led_control[kNumberOfRgbs];
-  
+    void set_scene(uint8_t scene) {
+      scene_ = scene;
+    }
+    uint8_t scene() const {
+      return scene_;
+    }
+
+    RgbLedControl rgb_led_control[kNumberOfRgbs];
+
   private:
-  
-  bool individual_ = true;
-  uint8_t scene_ = 0;
+
+    bool individual_ = true;
+    uint8_t scene_ = 0;
 };
 
 #endif  // PICODMX_RGBOUTPUT_PLAYOFLIGHT_H_

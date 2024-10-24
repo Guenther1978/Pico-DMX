@@ -4,7 +4,7 @@
 
 #include "led.h"
 
-PlayOfLight::PlayOfLight()
+void PlayOfLight::Init()
 {
   rgb_led_control[0].Init(kAddressRgb0);
   rgb_led_control[1].Init(kAddressRgb1);
@@ -39,6 +39,58 @@ void PlayOfLight::IncreaseScene(void)
 {
   scene_ ++;
   if (scene_ >= kNumberOfScenes)
+  {
+    scene_ = 0;
+  }
+}
+
+void PlayOfLight::CurrentTimeChooseScene(unsigned long time)
+{
+  if ((time >= seconds[0]) && (time < seconds[1]))
+  {
+    scene_ = 1;
+  }
+  else if ((time >= seconds[1]) && (time < seconds[2]))
+  {
+    scene_ = 2;
+  }
+  else if ((time >= seconds[2]) && (time < seconds[3]))
+  {
+    scene_ = 3;
+  }
+  else if ((time >= seconds[3]) && (time < seconds[4]))
+  {
+    scene_ = 4;
+  }
+  else if ((time >= seconds[4]) && (time < seconds[5]))
+  {
+    scene_ = 5;
+  }
+  else if ((time >= seconds[5]) && (time < seconds[6]))
+  {
+    scene_ = 6;
+  }
+  else if ((time >= seconds[6]) && (time < seconds[7]))
+  {
+    scene_ = 7;
+  }
+  else if ((time >= seconds[7]) && (time < seconds[8]))
+  {
+    scene_ = 8;
+  }
+  if ((time >= seconds[8]) && (time < seconds[9]))
+  {
+    scene_ = 9;
+  }
+  if ((time >= seconds[9]) && (time < seconds[10]))
+  {
+    scene_ = 10;
+  }
+  if ((time >= seconds[10]) && (time < seconds[11]))
+  {
+    scene_ = 11;
+  }
+  else
   {
     scene_ = 0;
   }

@@ -23,7 +23,7 @@ bool TimeControl::Compare()
 
 unsigned long TimeControl::GetTime()
 {
-	unsigned long elapsed_time = millis() - old_millis_;
+	unsigned long elapsed_time = (millis() - old_millis_) / 1000;
 	return elapsed_time;
 }
 
