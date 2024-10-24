@@ -29,6 +29,7 @@ uint8_t universe[UNIVERSE_LENGTH + 1];
 void setup()
 {
   trigger_dmx.set_old_millis(millis());
+  scene_timer.set_old_millis(millis());
 
   play_of_light.Init();
 
@@ -50,17 +51,13 @@ void loop()
 {
   trigger_dmx.WaitMilliseconds(100);
 
-  play_of_light.CurrentTimeChooseScene(scene_timer.GetTime());
-  play_of_light.UpdateProperties();
-  play_of_light.UpdateIntensities();  
-
-  for (uint8_t i = 0; i < kNumberOfRgbs; i ++)
+  if (play_of_light.CurrentTimeChooseScene(scene_timer.GetTime()))
   {
-    for (uint8_t j = 0; j < kNumberOfLeds; j ++)
-    {
-      universe[play_of_light.rgb_led_control[i].led[j].address()] = play_of_light.rgb_led_control[i].led[j].intensity();
-    }
+    play_of_light.UpdateProperties();
+    Serial.print("Neue Szene zum Zeitpunkt: ");
+    Serial.println(scene_timer.GetTime());
   }
+  play_of_light.UpdateIntensities();
 
   // Send out universe on GPIO-pin 1
   dmx.write(universe, UNIVERSE_LENGTH);
