@@ -44,8 +44,10 @@ void PlayOfLight::IncreaseScene(void)
   }
 }
 
-void PlayOfLight::CurrentTimeChooseScene(unsigned long time)
+bool PlayOfLight::CurrentTimeChooseScene(unsigned long time)
 {
+  uint8_t old_scene = scene_;
+
   if ((time >= seconds[0]) && (time < seconds[1]))
   {
     scene_ = 1;
@@ -94,4 +96,7 @@ void PlayOfLight::CurrentTimeChooseScene(unsigned long time)
   {
     scene_ = 0;
   }
+
+  bool scene_has_changed (old_scene != scene_);
+  return scene_has_changed;
 }

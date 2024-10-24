@@ -25,7 +25,7 @@ class PlayOfLight
     void UpdateIntensities(void);
 
     void IncreaseScene(void);
-    void CurrentTimeChooseScene(unsigned long);
+    bool CurrentTimeChooseScene(unsigned long);
 
     void set_individual(bool individual) {
       individual_ = individual;
