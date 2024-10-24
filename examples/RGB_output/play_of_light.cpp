@@ -78,15 +78,15 @@ void PlayOfLight::CurrentTimeChooseScene(unsigned long time)
   {
     scene_ = 8;
   }
-  if ((time >= seconds[8]) && (time < seconds[9]))
+  else if ((time >= seconds[8]) && (time < seconds[9]))
   {
     scene_ = 9;
   }
-  if ((time >= seconds[9]) && (time < seconds[10]))
+  else if ((time >= seconds[9]) && (time < seconds[10]))
   {
     scene_ = 10;
   }
-  if ((time >= seconds[10]) && (time < seconds[11]))
+  else if ((time >= seconds[10]) && (time < seconds[11]))
   {
     scene_ = 11;
   }
