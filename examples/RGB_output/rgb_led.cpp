@@ -44,8 +44,8 @@ void RgbLedControl::Update()
               {
                 uint8_t number = (uint8_t)random(0xFF);
                 if ((number < led[i].pointer()) && (number >= led[i].pointer_min_limit()))
-              {
-                led[i].set_min_pointer(number);
+                {
+                  led[i].set_min_pointer(number);
                 }
               }
               if (led[i].wait_at_max())
